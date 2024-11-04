@@ -1,0 +1,265 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 2em; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    height: 150px; 
+}
+
+
+.titulo-principal {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3em; /* Aumentado de 2em a 3em */
+}
+
+.clima {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1em; /* Aumentado el padding */
+    border-radius: 8px;
+    font-size: 1.1em; /* Aumentado el tamaño de fuente */
+    text-align: left;
+}
+
+.clima h2 {
+    margin: 0 0 0.8em 0;
+    font-size: 1.3em; /* Aumentado el tamaño del título */
+}
+
+.login {
+    position: absolute;
+    right: 30px; /* Aumentado el margen derecho */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#loginBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 25px; /* Botón más grande */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em; /* Texto más grande */
+}
+
+
+#loginBtn:hover {
+    background-color: #45a049;
+}
+
+.login-form {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.login-form input {
+    display: block;
+    margin: 10px 0;
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.login-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.login-form button:hover {
+    background-color: #45a049;
+}
+
+nav {
+    background-color: #444;
+    padding: 1em; 
+    margin-top: 20px; 
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 1em;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.contenido {
+    display: flex;
+    margin: 1em;
+}
+
+main {
+    flex: 3;
+    background-color: #f5f5f5; 
+    padding: 2em;
+    margin-right: 1em;
+}
+
+main h2 {
+    margin-bottom: 1em;
+    text-align: center;
+    color: #333;
+    font-size: 1.8em;
+}
+
+aside {
+    flex: 1;
+    background-color: #e6e6e6;
+    padding: 1.5em;
+    border-radius: 8px;
+}
+
+aside {
+    min-width: 300px;
+    max-width: 400px;
+}
+
+aside h2 {
+    color: #333;
+    margin-bottom: 1.5em;
+    text-align: center;
+    font-size: 1.5em;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 10px;
+}
+
+.noticias-destacadas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.noticia-destacada {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.noticia-destacada:hover {
+    transform: translateY(-3px);
+}
+
+.noticia-destacada img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.contenido-destacado {
+    padding: 0 15px;
+    flex: 1;
+}
+
+.noticia-destacada h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 1em;
+}
+
+.noticia-destacada p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.4;
+}
+
+.fecha {
+    display: block;
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+}
+
+.noticia {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    margin-bottom: 0; 
+    border: none; 
+    padding: 0;
+}
+
+.noticia:hover {
+    transform: translateY(-5px);
+}
+
+.noticia img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.noticia h3 {
+    padding: 15px 15px 10px;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.noticia p {
+    padding: 0 15px 15px;
+    margin: 0;
+    color: #666;
+}
+
+.noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px 0;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em;
+    margin-top: 1em;
+}

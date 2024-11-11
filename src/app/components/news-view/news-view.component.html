@@ -1,0 +1,18 @@
+<p>news-view works!</p>
+<div *ngIf="news; else loading">
+    <h1>{{ news.title }}</h1>
+    <p><strong>{{ news.publisher }}</strong></p>
+    <p>{{ news.snippet }}</p>
+    
+    <p><strong>Publicado:</strong> {{ news.timestamp | date:'dd/MM/yy' }}</p>
+    <div *ngIf="news.imageUrl">
+        <img [src]="news.imageUrl" alt="Image" width="300">
+    </div>
+
+    <!-- Botón de "Me gusta" con el contador -->
+    <button (click)="likeNews()">Me gusta ({{ news.likes?.length || 0 }})</button>
+</div>
+
+<ng-template #loading>
+    <p>Cargando noticia...</p>
+</ng-template>

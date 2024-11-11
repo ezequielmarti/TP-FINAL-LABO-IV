@@ -27,12 +27,12 @@ export class DataService {
   }
   
 
-  setall(news : News[]){
+  saveAll(news : News[]){
     return this.http.put('https://news-f8836-default-rtdb.firebaseio.com/data.json',news);
   }
 
 
-  getNewsById(id: number): Observable<News> {
+  saveNews(id: number): Observable<News> {
     return this.http.get<News>(`https://news-f8836-default-rtdb.firebaseio.com/data/${id}.json`);
   }
 }

@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { News } from '../../models/news';
 import { Router } from '@angular/router';
 
-import { ListManagementService } from '../../services/list-management.service';
+import { NewsService } from '../../services/news.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class NewsListComponent implements OnInit{
   // Definir el número de página actual
   currentPage: number = 1;
 
-  constructor(private router: Router, private list:ListManagementService){}
+  constructor(private router: Router, private list:NewsService){}
   ngOnDestroy(): void {
     this.list.guardar();
   }

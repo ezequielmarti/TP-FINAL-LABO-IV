@@ -6,7 +6,7 @@ import { BehaviorSubject, catchError, concatMap, delay, from, Observable, of, pi
 @Injectable({
   providedIn: 'root'
 })
-export class ListManagementService {
+export class NewsService {
 
   newsList = new Array<News>();
   nextId: number= 0;
@@ -28,7 +28,7 @@ export class ListManagementService {
       this.setId();
       
       //this.lastNews();  //cuando se activa trae noticias de la api
-      
+      this.sortList();
       console.log('ANDAaaaaaaa',this.newsList);
       // Emitimos el nuevo arreglo (actualizado) a los suscriptores
       this.newsListSubject.next(this.newsList);
@@ -50,7 +50,7 @@ export class ListManagementService {
   }
   guardar(): void{
     console.log('aaaaaaaaaaaaaaaa',this.newsList);
-    this.data.setall(this.newsList)
+    this.data.saveAll(this.newsList)
     .pipe(
       catchError((error) => of(`¡Oh no, ha ocurrido un error! ${error}`))
     )
@@ -118,7 +118,10 @@ export class ListManagementService {
     );
   }
   sortList(){
-    
+    this.newsList.sort((a, b) => b.timestamp - a.timestamp); // Orden ascendente
   }
-  
+
+  getNewsId(id: number): News | undefined{
+    return this.newsList.find(news => news.id === id);
+  }
 }

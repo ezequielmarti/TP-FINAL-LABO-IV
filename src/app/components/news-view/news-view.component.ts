@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { News } from '../../models/news';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../services/data.service';
-import { NewsListComponent } from '../news-list/news-list.component';
+import { NewsService } from '../../services/news.service';
 
 @Component({
   selector: 'app-news-view',
@@ -11,9 +11,9 @@ import { NewsListComponent } from '../news-list/news-list.component';
 })
 export class NewsViewComponent implements OnInit{
   
-  news: News | null = null;
+  news: News | undefined;
   
-  constructor(private route: ActivatedRoute, private newsService: DataService){}
+  constructor(private route: ActivatedRoute, private newsService: NewsService){}
 
   ngOnInit(): void {
     const newsId = this.route.snapshot.paramMap.get('id');  // Obtener el ID de la URL
@@ -21,15 +21,11 @@ export class NewsViewComponent implements OnInit{
     if (newsId) {
       // Convertir el ID de string a número
       const id = parseInt(newsId, 10);
-
       if (!isNaN(id)) {
-        this.newsService.getNewsById(id).subscribe(data => {
-          this.news = data;  // Asignar los detalles de la noticia
-          console.log(data);
-        });
-      } else {
-        console.error('ID inválido:', newsId);
-      }
+        this.news = this.newsService.getNewsId(id);
+      };
+    } else {
+      console.error('ID inválido:', newsId);
     }
   }
 

@@ -1,45 +1,76 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { News } from '../models/news';
-import { BehaviorSubject, catchError, concatMap, delay, from, Observable, of, pipe, tap } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, delay, forkJoin, from, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class NewsService {
 
-  newsList = new Array<News>();
-  nextId: number= 0;
-  categories = ['entertainment','world','business','health','sport','science','technology'];
-  newsData: any;
-  private newsListSubject = new BehaviorSubject<News[]>([]);  // Valor inicial vacío
-  
-  constructor(private data:DataService) { }
+  private newsList = new Array<News>();
+  private nextId: number = 0;
+  private categories = ['entertainment', 'world', 'business', 'health', 'sport', 'science', 'technology'];
+  private newsListSubject = new BehaviorSubject<News[]>([]);
 
-  loadList(): void{
-    this.data.loadNewsData()
-    .pipe(
-      catchError(err => of([]))
-    )
-    .subscribe(response => {
-      if(response){
-        this.newsList = response;
+  constructor(private data: DataService) { }
+
+  loadList(): void {
+    this.data.loadNews()
+      .pipe(
+        catchError(err => of([]))
+      )
+      .subscribe(response => {
+        if (response) {
+          // Reorganizamos las noticias para que sean en un orden numérico adecuado (0, 1, 2,...)
+          this.newsList = Object.values(response);  // Convierte el objeto en un array
+        }
+        this.setId();
+        //this.lastNews();  // Trae noticias de la API
+        this.sortList();
+        this.newsListSubject.next(this.newsList);  // Emitimos la lista actualizada
+      });
+  }
+
+  convertirGuardar(): void {
+    // Iteramos sobre cada noticia en la lista 'newsList'
+    this.newsList.forEach(newsData => {
+      // Convertimos cada elemento en una instancia de la clase 'News'
+      const news = new News(
+        newsData.id, 
+        newsData.title, 
+        newsData.snippet, 
+        newsData.publisher, 
+        newsData.url, 
+        newsData.imageUrl, 
+        newsData.timestamp, 
+        newsData.category, 
+        newsData.visible, 
+        newsData.likes || [],  // Aseguramos que 'likes' sea un arreglo, en caso de que sea undefined
+        newsData.key
+      );
+      news.likes.pop();
+      // Ahora que tenemos una instancia de 'News', usamos 'updateNews' para guardar los cambios
+      if (news.key) {
+        // Si la noticia ya tiene un 'key' (lo que implica que ya está guardada en la base de datos),
+        // llamamos a la función 'updateNews' para actualizarla en la base de datos.
+        this.data.updateNews(news.key, news).subscribe(response => {
+          console.log(`Noticia con key ${news.key} actualizada correctamente`, response);
+        }, error => {
+          console.error(`Error al actualizar la noticia con key ${news.key}`, error);
+        });
+      } else {
+        console.error('La noticia no tiene un key asignado, no se puede actualizar.');
       }
-      this.setId();
-      
-      //this.lastNews();  //cuando se activa trae noticias de la api
-      this.sortList();
-      console.log('ANDAaaaaaaa',this.newsList);
-      // Emitimos el nuevo arreglo (actualizado) a los suscriptores
-      this.newsListSubject.next(this.newsList);
-    }); 
+    });
   }
 
   getNewsList() {
     return this.newsListSubject.asObservable();  // Retornamos un Observable para que los componentes se suscriban
   }
 
-  setId(){
+  private setId() {
     if (this.newsList.length > 0) {
       // Si la lista no está vacía, obtenemos el 'id' del último elemento y sumamos 1
       this.nextId = Math.max(...this.newsList.map(news => news.id)) + 1;
@@ -48,50 +79,40 @@ export class NewsService {
       this.nextId = 1;
     }
   }
-  guardar(): void{
-    console.log('aaaaaaaaaaaaaaaa',this.newsList);
-    this.data.saveAll(this.newsList)
-    .pipe(
-      catchError((error) => of(`¡Oh no, ha ocurrido un error! ${error}`))
-    )
-    .subscribe(response => {
-      console.log("guardado con exito",response);
-    })
+
+  private lastNews(): void {
+    // Procesamos las categorías secuencialmente con un retraso de 1 segundo entre cada llamada
+    from(this.categories)
+      .pipe(
+        concatMap((cat) => {
+          // Llamamos a la API para cada categoría
+          return this.apiNews(cat).pipe(
+            // Añadimos un retraso de 1 segundo entre cada solicitud
+            delay(1000)
+          );
+        })
+      )
+      .subscribe({
+        complete: () => {
+          // Una vez que todas las categorías han sido procesadas, guardamos los datos
+          this.save();  // Guardamos las noticias que no tienen 'key'
+        }
+      });
   }
 
-    lastNews(): void {
-      // Procesamos las categorías secuencialmente con un retraso de 1 segundo entre cada llamada
-      from(this.categories)
-        .pipe(
-          concatMap((cat) => {
-            // Llamamos a la API para cada categoría
-            return this.apiNews(cat).pipe(
-              // Añadimos un retraso de 1 segundo entre cada solicitud
-              delay(1000) // Asegura que haya un delay de 1 segundo entre cada llamada
-            );
-          })
-        )
-        .subscribe({
-          complete: () => {
-            // Una vez que todas las categorías han sido procesadas, guardamos los datos
-            this.guardar();
-            console.log('Guardado exitoso después de cargar todas las noticias');
-          }
-        });
-    }
-    
-  isDuplicate(news: News): boolean {
+  private isDuplicate(news: News): boolean {
     // Verificamos si alguna noticia en la lista tiene el mismo `newsUrl`
     return this.newsList.some(existingNews => existingNews.url === news.url);
   }
-    
-  apiNews(cat: string): Observable<void> {
+
+  private apiNews(cat: string): Observable<void> {
+    let newsData: any;
     return this.data.loadApiNews(cat).pipe(
       catchError(err => of([])), // Manejo de errores
       tap((response: any) => {
-        this.newsData = response;
-        if (this.newsData.items && Array.isArray(this.newsData.items)) {
-          this.newsData.items.forEach((element: {
+        newsData = response;
+        if (newsData.items && Array.isArray(newsData.items)) {
+          newsData.items.forEach((element: {
             title: string;
             snippet: string;
             publisher: string;
@@ -104,8 +125,8 @@ export class NewsService {
               aux = element.images.thumbnail;
             }
             // Crear una nueva noticia
-            const newNews = new News(this.nextId,element.title,element.snippet,element.publisher,
-              element.newsUrl,aux,element.timestamp,cat,true,new Array<number>());
+            const newNews = new News(this.nextId, element.title, element.snippet, element.publisher,
+              element.newsUrl, aux, element.timestamp, cat, true, new Array<string>());
             // Verificar si la noticia ya existe
             if (!this.isDuplicate(newNews)) {
               // Solo agregamos si no es un duplicado
@@ -117,11 +138,87 @@ export class NewsService {
       })
     );
   }
-  sortList(){
+
+  // Función que guarda las noticias que no tienen 'key' asignado
+  private save(): void {
+    const newsWithoutKey = this.newsList.filter(news => !news.key);  // Filtramos las noticias sin 'key'
+    if (newsWithoutKey.length > 0) {
+      const saveRequests = newsWithoutKey.map(news => {
+        return this.data.saveNews(news).pipe(
+          catchError((error) => {
+            console.error(`Error al guardar la noticia:`, error);
+            return of({ name: '' });  // Retornamos un objeto vacío con 'name' en caso de error
+          }),
+          tap((response: { name: string }) => {
+            if (response.name) {
+              // Asignamos el 'key' (name de la respuesta de Firebase) a cada noticia
+              news.key = response.name;
+              console.log(`Noticia guardada con key: ${news.key}`);
+              
+              // Luego de guardar, actualizamos la noticia con su 'key' (si es necesario)
+              this.data.updateNews(news.key, news).subscribe(updateResponse => {
+                console.log("Noticia actualizada con éxito en Firebase con key:", news.key);
+              });
+            } else {
+              console.error('No se obtuvo el key de Firebase para la noticia.');
+            }
+          })
+        );
+      });
+
+      // Ejecutamos todas las peticiones de guardado en paralelo
+      forkJoin(saveRequests).subscribe(
+        () => {
+          console.log("Todas las noticias fueron guardadas y actualizadas con éxito.");
+        },
+        error => {
+          console.error("Error al guardar las noticias:", error);
+        }
+      );
+    }
+  }
+
+  private sortList() {
     this.newsList.sort((a, b) => b.timestamp - a.timestamp); // Orden ascendente
   }
 
-  getNewsId(id: number): News | undefined{
-    return this.newsList.find(news => news.id === id);
+
+  // Función para agregar un nuevo "like" a una noticia
+  addLikeToNews(newsKey: string, newLike: string): void {
+    // Paso 1: Obtener la noticia por su "key"
+    this.data.loadNewsByKey(newsKey)
+      .pipe(
+        catchError(error => of(null)) // Devolvemos `null` si ocurre un error
+      )
+      .subscribe(news => {
+        if (news) {
+          const newsData = new News(
+            news.id,
+            news.title,
+            news.snippet,
+            news.publisher,
+            news.url,
+            news.imageUrl,
+            news.timestamp,
+            news.category,
+            news.visible,
+            news.likes,
+            news.key
+          );
+          newsData.likes.push(newLike);
+
+          // Paso 3: Actualizar la noticia en la base de datos con el nuevo arreglo de "likes"
+          this.data.updateLikes(newsKey, { likes: newsData.likes })
+            .pipe(
+              catchError(error => of(`Error al actualizar la noticia: ${error}`))
+            )
+            .subscribe(response => {
+              console.log('Noticia actualizada con el nuevo like:', response);
+            });
+        } else {
+          console.error('No se encontró la noticia con el key proporcionado');
+        }
+      });
   }
 }
+

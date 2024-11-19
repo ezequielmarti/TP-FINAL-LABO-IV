@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { News } from '../models/news';
-import { lastValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Weather } from '../inerfaces/weather';
 
 @Injectable({
   providedIn: 'root'
@@ -22,17 +23,41 @@ export class DataService {
     )
   }
   
-  loadNewsData(): Observable<News[]> {
-    return this.http.get<News[]>('https://news-f8836-default-rtdb.firebaseio.com/data.json');
-  }
-  
-
-  saveAll(news : News[]){
-    return this.http.put('https://news-f8836-default-rtdb.firebaseio.com/data.json',news);
+  loadNews(): Observable<News[]> {
+    return this.http.get<News[]>('https://news-f8836-default-rtdb.firebaseio.com/news.json');
   }
 
+  // Método para cargar una noticia por su "key"
+  loadNewsByKey(key: string): Observable<News> {
+    return this.http.get<News>(`https://news-f8836-default-rtdb.firebaseio.com/news/${key}.json`);
+  }
 
-  saveNews(id: number): Observable<News> {
-    return this.http.get<News>(`https://news-f8836-default-rtdb.firebaseio.com/data/${id}.json`);
+  // Método para actualizar solo los campos especificados (usando PATCH)
+  updateLikes(key: string, news: Partial<News>): Observable<any> {
+    return this.http.patch(`https://news-f8836-default-rtdb.firebaseio.com/news/${key}.json`, news);
+  }
+
+    // Método para guardar una noticia
+  saveNews(news: News) {
+    return this.http.post<{ name: string }>('https://news-f8836-default-rtdb.firebaseio.com/news.json',news);
+  }
+
+  updateNews(key: string, news: News) {
+    return this.http.put(`https://news-f8836-default-rtdb.firebaseio.com/news/${key}.json`,news);
+  }
+
+  getNews(key: string): Observable<News>{
+    return this.http.get<News>(`https://news-f8836-default-rtdb.firebaseio.com/news/${key}.json`);
+  }
+
+  loadApiWeather(): Observable<any>{
+    return this.http.get<any>('https://open-weather13.p.rapidapi.com/city/Mar%20del%20Plata/ES',
+      {
+        headers:{
+          'x-rapidapi-key': 'fe5cee5d5emsheb3dd67a6c86484p1151d6jsnb08f71df05a7',
+          'x-rapidapi-host': 'open-weather13.p.rapidapi.com'
+        }
+      }
+    )
   }
 }

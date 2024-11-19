@@ -1,0 +1,35 @@
+<div *ngIf="clima; else loading">
+    <div class="weather-container">
+        <!-- Ciudad -->
+        <h2>{{ clima.name }}</h2>
+    
+        <!-- Temperatura -->
+        <div class="weather-info">
+            <span class="label">Temperatura:</span>
+            <span>{{ convertToCelsius(clima.main.temp) | number:'1.0-0' }}°C</span>
+        </div>
+    
+        <!-- Descripción del clima -->
+        <div class="weather-info">
+            <span class="label">Descripción:</span>
+            <span>{{ clima.weather[0].description }}</span>
+        </div>
+    
+        <!-- Velocidad del viento -->
+        <div class="weather-info">
+            <span class="label">Viento:</span>
+            <span>{{ convertToKmPerHour(clima.wind.speed) | number:'1.0-0' }} km/h</span>
+        </div>
+    
+        <!-- Humedad -->
+        <div class="weather-info">
+            <span class="label">Humedad:</span>
+            <span>{{ clima.main.humidity }}%</span>
+        </div>
+    </div>
+</div>
+    
+<!-- Cargando mientras se obtiene la información -->
+<ng-template #loading>
+    <p>Cargando clima...</p>
+</ng-template>

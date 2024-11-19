@@ -19,14 +19,11 @@ export class NewsListComponent implements OnInit{
   currentPage: number = 1;
 
   constructor(private router: Router, private list:NewsService){}
-  ngOnDestroy(): void {
-    this.list.guardar();
-  }
+  
 
   ngOnInit(): void {
     this.list.getNewsList().subscribe(response => {
       this.newsList = response;  // Asignamos la lista de noticias a la variable local
-      console.log('Noticias cargadas:', this.newsList);
     });
 
     // Llamamos a loadList para disparar la carga de noticias
@@ -36,7 +33,7 @@ export class NewsListComponent implements OnInit{
 
   onNewsClick(news: News) {
     // Navegar al componente de detalles de la noticia pasando el ID de la noticia
-    this.router.navigate(['/news', news.id]);
+    this.router.navigate(['/news', news.key]);
   }
 
 

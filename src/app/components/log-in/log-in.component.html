@@ -1,0 +1,57 @@
+<div class="log-in-container">
+    <!-- Condicional para mostrar el contenido según el valor de isLog -->
+    <ng-container *ngIf="!isLog(); else loggedInTemplate">
+        <!-- Enlaces "Log In" y "Sign Up" cuando isLog es false -->
+        <a (click)="stateLoginForm()" class="link-btn">Log In</a>
+        <a (click)="goToSignUp()" class="link-btn">Sign Up</a>
+    </ng-container>
+
+    <!-- Template cuando isLog es true -->
+    <ng-template #loggedInTemplate>
+        <!-- Mensaje de saludo cuando el usuario está logueado -->
+        <h2>Hola, {{ userName }}</h2>
+        <!-- Enlace de "Log Out" -->
+        <a (click)="logOut()" class="link-btn">Log Out</a>
+    </ng-template>
+
+    <!-- Formulario de login, solo se muestra si showLoginForm es true -->
+    <form *ngIf="showLoginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campo para el Email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input 
+                id="email"
+                type="email" 
+                class="form-control" 
+                formControlName="email" 
+                placeholder="Introduce tu correo electrónico"
+                required
+            />
+            <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched" class="error-message">
+                Por favor, introduce un correo electrónico válido.
+            </div>
+        </div>
+        <!-- Campo para la contraseña -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input 
+                id="password"
+                type="password" 
+                class="form-control" 
+                formControlName="password" 
+                placeholder="Introduce tu contraseña" 
+                required
+            />
+            <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched" class="error-message">
+                La contraseña debe tener al menos 6 caracteres.
+            </div>
+        </div>
+        <!-- Botón de submit, deshabilitado si el formulario es inválido -->
+        <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Iniciar sesión</button>
+    </form>
+
+    <!-- Mensaje de error global (si el login falla) -->
+    <div *ngIf="loginError" class="error-message">
+        Usuario o contraseña incorrecta. Intente nuevamente.
+    </div>
+</div>

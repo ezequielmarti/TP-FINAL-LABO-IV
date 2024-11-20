@@ -4,13 +4,15 @@ import { NewsListComponent } from './components/news-list/news-list.component';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { LogInComponent } from './components/log-in/log-in.component';
+import { HomeComponent } from './components/home/home.component';
+import { guardianInGuard } from './guardians/guardian-in.guard';
 
 const routes: Routes = [
-  {path: 'newsList', component: NewsListComponent},
-  {path: '', redirectTo: '/newsList', pathMatch:'full'},
-  { path: 'news/:key', component: NewsViewComponent },
-  { path: 'signUp', component: SignUpComponent },
-  { path: 'logIn', component: LogInComponent }
+  { path: '', component: HomeComponent},
+  { path: 'news-list/:category', component: NewsListComponent},
+  { path: 'news/:key', component: NewsViewComponent, canActivate: [guardianInGuard]},
+  { path: 'sign-up', component: SignUpComponent },
+  { path: 'log-in', component: LogInComponent }
 ];
 
 @NgModule({

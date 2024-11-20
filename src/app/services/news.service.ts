@@ -33,41 +33,24 @@ export class NewsService {
       });
   }
 
-  convertirGuardar(): void {
-    // Iteramos sobre cada noticia en la lista 'newsList'
-    this.newsList.forEach(newsData => {
-      // Convertimos cada elemento en una instancia de la clase 'News'
-      const news = new News(
-        newsData.id, 
-        newsData.title, 
-        newsData.snippet, 
-        newsData.publisher, 
-        newsData.url, 
-        newsData.imageUrl, 
-        newsData.timestamp, 
-        newsData.category, 
-        newsData.visible, 
-        newsData.likes || [],  // Aseguramos que 'likes' sea un arreglo, en caso de que sea undefined
-        newsData.key
-      );
-      news.likes.pop();
-      // Ahora que tenemos una instancia de 'News', usamos 'updateNews' para guardar los cambios
-      if (news.key) {
-        // Si la noticia ya tiene un 'key' (lo que implica que ya está guardada en la base de datos),
-        // llamamos a la función 'updateNews' para actualizarla en la base de datos.
-        this.data.updateNews(news.key, news).subscribe(response => {
-          console.log(`Noticia con key ${news.key} actualizada correctamente`, response);
-        }, error => {
-          console.error(`Error al actualizar la noticia con key ${news.key}`, error);
-        });
-      } else {
-        console.error('La noticia no tiene un key asignado, no se puede actualizar.');
-      }
-    });
-  }
-
   getNewsList() {
     return this.newsListSubject.asObservable();  // Retornamos un Observable para que los componentes se suscriban
+  }
+
+  getCategoryList(category: string): Observable<News[]> {
+    return new Observable(observer => {
+      // Nos suscribimos al Subject para obtener la lista de noticias
+      this.getNewsList().subscribe(newsList => {
+        if (newsList.length === 0) {
+          // Si no hay noticias, cargamos las noticias primero
+          this.loadList();
+        } else {
+          // Si ya hay noticias, aplicamos el filtro directamente
+          const list = newsList.filter(news => news.category === category);
+          observer.next(list);  // Emitimos el resultado filtrado
+        }
+      });
+    });
   }
 
   private setId() {

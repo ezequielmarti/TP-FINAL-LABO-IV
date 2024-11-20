@@ -13,7 +13,6 @@ export class LogInComponent implements OnInit {
   loginForm!: FormGroup;
   loginError: boolean = false;
   showLoginForm: boolean = false;
-  userName: string = "";
 
   constructor(private userService: UserService, private router: Router) {}
 
@@ -23,22 +22,32 @@ export class LogInComponent implements OnInit {
       email: new FormControl(),
       password: new FormControl()
     });
+
+    // Suscripción al estado de login
+    this.userService.getLoginStatus().subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.showLoginForm = false;  // Ocultar formulario de login si el usuario está logueado
+      } else {
+        this.showLoginForm = false;  // Inicialmente está oculto si no está logueado
+      }
+    });
   }
 
   onSubmit() {
     this.userService.logIn(this.loginForm.value)
       .then(() => {
-        this.router.navigate(['/']); // Navegar a la página principal después de un login exitoso
-        this.loginError = false;  // Resetear el error si el login es exitoso
+        this.loginError = false;
+        this.router.navigate(['/']);  // Navegar a la página principal después de un login exitoso
       })
       .catch(error => {
         this.loginError = true;
         console.log('Error de login', error);  // Para debugging
       });
   }
-  
+
+  // Esta función se llama cuando el usuario hace click en "Log In"
   stateLoginForm() {
-    this.showLoginForm = true; // Muestra el formulario de login
+    this.showLoginForm = !this.showLoginForm;  // Alterna la visibilidad del formulario
   }
 
   goToSignUp() {
@@ -47,12 +56,11 @@ export class LogInComponent implements OnInit {
 
   logOut() {
     this.userService.logOut();  // Llamar al servicio de logout
+    this.router.navigate(['/']);  // Redirigir al usuario a la página principal
   }
 
   isLog(): boolean {
-    // Si hay un token en las cookies, el usuario está logueado
-    return !!this.userService.getCookie();
+    return this.userService.isLoggedIn();  // Devuelve si el usuario está logueado
   }
 
-  
 }

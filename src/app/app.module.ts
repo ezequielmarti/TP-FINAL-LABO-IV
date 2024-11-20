@@ -16,6 +16,9 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { CookieService } from 'ngx-cookie-service';
+import { NavigatorComponent } from './components/navigator/navigator.component';
+import { HomeComponent } from './components/home/home.component';
+import { HighlightComponent } from './components/highlight/highlight.component';
 
 
 
@@ -26,7 +29,10 @@ import { CookieService } from 'ngx-cookie-service';
     NewsViewComponent,
     WeatherComponent,
     LogInComponent,
-    SignUpComponent
+    SignUpComponent,
+    NavigatorComponent,
+    HomeComponent,
+    HighlightComponent
   ],
   imports: [
     BrowserModule,

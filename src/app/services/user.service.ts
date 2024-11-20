@@ -1,16 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
-import { signOut, UserCredential } from 'firebase/auth';
-import { getDatabase, set, ref, get } from 'firebase/database';
+import { BehaviorSubject } from 'rxjs';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential} from '@angular/fire/auth';
 import { CookieService } from 'ngx-cookie-service';
-import { User } from '../models/user';
-
+import { getDatabase, ref, get, set } from 'firebase/database';
+import { User} from '../models/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  constructor(private auth: Auth, private cookies: CookieService) { }
+  private loggedInSubject = new BehaviorSubject<boolean>(false);  // Estado de login
+  private userNameSubject = new BehaviorSubject<string>('');
+
+  constructor(private auth: Auth, private cookies: CookieService) {
+    // Comprobar si el token está presente para verificar el estado de autenticación
+    const token = this.cookies.get('token');
+    if (token) {
+      this.loggedInSubject.next(true);  // El usuario está logueado
+      this.auth.onAuthStateChanged(user => {
+        if (user) {
+          this.userNameSubject.next(user.displayName || '');  // Establecer nombre de usuario
+        }
+      });
+    }
+  }
 
   register({ email, password, userName, subscription }: any): Promise<UserCredential | undefined> {
     return createUserWithEmailAndPassword(this.auth, email, password)
@@ -35,33 +48,50 @@ export class UserService {
       });
   }
 
+  // Método para loguear al usuario
   logIn({ email, password }: any) {
     return signInWithEmailAndPassword(this.auth, email, password)
-      .then(response => {
+      .then((response) => {
         if (response && response.user) {
-          response.user.getIdToken().then(token => {
-            this.cookies.set('token', token); // Guardar token en cookies
+          response.user.getIdToken().then((token) => {
+            this.cookies.set('token', token); // Guardar el token en las cookies
+            this.loggedInSubject.next(true);  // Cambiar el estado de login a verdadero
+            this.userNameSubject.next(response.user.displayName || ''); // Establecer el nombre de usuario
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Error de login', error);
-        throw true; // Lanzar el error para manejarlo en el componente
+        throw true; // Lanzamos el error para manejarlo en el componente
       });
   }
 
-  getCookie() {
-    return this.cookies.get('token');  // Obtener el token desde las cookies
+  // Método para obtener el estado de login
+  getLoginStatus() {
+    return this.loggedInSubject.asObservable();  // Permite a los componentes suscribirse al estado de login
   }
 
+  // Obtener el token guardado en las cookies
+  getCookie() {
+    return this.cookies.get('token');
+  }
+
+  // Método para cerrar sesión
   logOut() {
     signOut(this.auth)
       .then(() => {
         this.cookies.delete('token'); // Eliminar token de las cookies
+        this.loggedInSubject.next(false);  // Cambiar el estado de login a falso
+        this.userNameSubject.next('');  // Limpiar el nombre de usuario
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Error al cerrar sesión', error);
       });
+  }
+
+  // Verificar si el usuario está logueado
+  isLoggedIn(): boolean {
+    return this.loggedInSubject.getValue();
   }
 
   getUserData(): Promise<User | null> {
@@ -105,5 +135,4 @@ export class UserService {
       });
     });
   }
-  
 }

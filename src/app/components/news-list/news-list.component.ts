@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 export class NewsListComponent implements OnInit, OnDestroy{
   newsList: News[] = [];
   // Definir cuántas noticias mostrar por página
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 18;
   // Definir el número de página actual
   currentPage: number = 1;
   private routeSub: Subscription | undefined;

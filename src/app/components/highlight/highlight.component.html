@@ -1,14 +1,14 @@
 <!-- highlight.component.html -->
-<div *ngIf="highlightedNews.length > 0; else noNews">
-    <h2>Noticias Destacadas</h2>
-    <ul>
-        <li *ngFor="let news of highlightedNews">
-            <h3>{{ news.title }}</h3>
-            <p>{{ news.category }}</p>
-            <a [href]="news.url" target="_blank">Leer más</a>
-        </li>
-    </ul>
-</div>
-<ng-template #noNews>
-    <p>No hay noticias destacadas en este momento.</p>
-</ng-template>
+    <div *ngIf="highlightedNews.length > 0; else noNews">
+        <h2 class="centered-title1">Noticias Destacadas</h2>
+        <ul>
+            <li *ngFor="let news of highlightedNews">
+                <h3>{{ news.title }}</h3>
+                <p>{{ news.category }}</p>
+                <a [href]="news.url" target="_blank">Leer más</a>
+            </li>
+        </ul>
+    </div>
+    <ng-template #noNews>
+        <p>No hay noticias destacadas en este momento.</p>
+    </ng-template>

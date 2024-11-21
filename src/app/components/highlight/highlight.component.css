@@ -1,19 +1,24 @@
-/* highlight.component.css */
 h2 {
     font-size: 24px;
-    color: #333;
+    color: #000000;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Crea 4 columnas de igual tamaño */
+    gap: 15px; /* Espacio entre los elementos */
 }
 
 li {
-    margin-bottom: 15px;
+    background-color: #f0f0f0; /* Color de fondo gris claro */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 li h3 {
@@ -27,4 +32,10 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.centered-title1 {
+    text-align: center;
+    font-size: 2.5em; /* Aumenta el tamaño de la fuente */
+    margin: 20px 0; /* Añade un poco de margen vertical */
 }

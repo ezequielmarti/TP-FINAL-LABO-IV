@@ -8,7 +8,7 @@ import { HomeComponent } from './components/home/home.component';
 import { guardianInGuard } from './guardians/guardian-in.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent},
+  { path: '', component: NewsListComponent},
   { path: 'news-list/:category', component: NewsListComponent},
   { path: 'news/:key', component: NewsViewComponent, canActivate: [guardianInGuard]},
   { path: 'sign-up', component: SignUpComponent },

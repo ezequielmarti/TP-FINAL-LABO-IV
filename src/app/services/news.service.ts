@@ -219,7 +219,7 @@ export class NewsService {
     return this.getNewsList().pipe(
       map(newsList => {
         const sortedNews = newsList.sort((a, b) => b.likes.length - a.likes.length);
-        return sortedNews.slice(0, 6);
+        return sortedNews.slice(0, 12);
       })
     );
   }

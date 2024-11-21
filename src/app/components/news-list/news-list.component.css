@@ -1,7 +1,28 @@
-
-.noticias-grid {
+.news-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    padding: 20px 0;
+}
+
+.news-item {
+    background-color: #e0e0e0; /* Color de fondo gris más oscuro */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.news-item h2 {
+    font-size: 1.5em; /* Aumenta el tamaño de la fuente */
+    font-style: italic; /* Aplica estilo itálico */
+    margin: 10px 0; /* Añade un poco de margen */
+}
+
+.centered-title {
+    text-align: center;
+    font-size: 2.5em; /* Aumenta el tamaño de la fuente */
+    margin: 20px 0; /* Añade un poco de margen vertical */
 }

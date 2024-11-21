@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { WeatherComponent } from './components/weather/weather.component';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -17,7 +17,6 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { CookieService } from 'ngx-cookie-service';
 import { NavigatorComponent } from './components/navigator/navigator.component';
-import { HomeComponent } from './components/home/home.component';
 import { HighlightComponent } from './components/highlight/highlight.component';
 import { CommentComponent } from './components/comment/comment.component';
 
@@ -32,7 +31,6 @@ import { CommentComponent } from './components/comment/comment.component';
     LogInComponent,
     SignUpComponent,
     NavigatorComponent,
-    HomeComponent,
     HighlightComponent,
     CommentComponent
   ],
@@ -41,7 +39,8 @@ import { CommentComponent } from './components/comment/comment.component';
     AppRoutingModule,
     HttpClientModule,
     NgxPaginationModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     provideFirebaseApp(() => initializeApp({

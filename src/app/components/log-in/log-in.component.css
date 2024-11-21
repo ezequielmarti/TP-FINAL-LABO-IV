@@ -1,14 +1,16 @@
 /* log-in.component.css */
 
 .log-in-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #21ec06;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+  width: 100%;
+  max-width: 200px;
+  padding: 20px;
+  background-color: #463c3c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute; /* Posiciona de forma absoluta */
+  top: 0; /* Coloca en la parte superior */
+  right: 0; /* Coloca en la parte derecha */
+}
   
   h2 {
     text-align: center;

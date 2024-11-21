@@ -1,0 +1,34 @@
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.titulo-principal {
+    margin: 0;
+    text-align: center;
+    font-size: 5em; /* Aumenta el tamaño de la fuente */
+    width: 100%; /* Asegura que el elemento ocupe todo el ancho disponible */
+    color: blue; /* Cambia el color del texto a azul */
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00f, 0 0 20px #00f, 0 0 25px #00f, 0 0 30px #00f, 0 0 35px #00f;
+    animation: glow 1.5s infinite alternate;
+}
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00f, 0 0 20px #00f, 0 0 25px #00f, 0 0 30px #00f, 0 0 35px #00f;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00f, 0 0 40px #00f, 0 0 50px #00f, 0 0 60px #00f, 0 0 70px #00f;
+    }
+}
+.main-container {
+    background-color: #b43a3a; /* Cambia este valor al color que prefieras */
+    padding: 20px; /* Opcional: añade un poco de padding */
+}

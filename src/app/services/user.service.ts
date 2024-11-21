@@ -32,7 +32,14 @@ export class UserService {
           const newUser: User = new User(userName,email,response.user.uid,subscription);
           set(ref(getDatabase(), 'users/' + response.user.uid), newUser)
             .then(() => {
-              console.log('Usuario guardado en la base de datos');
+              this.logIn({ email, password })
+              .then((loginResponse) => {
+                // Aquí ya el usuario está logueado, y la lógica de login y autenticación
+                // se maneja dentro de la función logIn, por lo que no necesitas hacer nada más
+              })
+              .catch((loginError) => {
+                console.error('Error al iniciar sesión automáticamente', loginError);
+              });
             })
             .catch((error) => {
               console.error('Error al guardar usuario en Realtime Database:', error);
@@ -134,5 +141,29 @@ export class UserService {
           });
       });
     });
+  }
+
+  getUserDataById(userId: string): Promise<User | null> {
+    const db = getDatabase();
+    const userRef = ref(db, 'users/' + userId);
+  
+    return get(userRef)
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          return new User(
+            userData.userName,
+            userData.email,
+            userData.key,
+            userData.subscription
+          );
+        } else {
+          return null;
+        }
+      })
+      .catch((error) => {
+        console.error('Error al obtener datos del usuario:', error);
+        return null;
+      });
   }
 }

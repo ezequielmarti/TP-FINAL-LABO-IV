@@ -1,15 +1,18 @@
 .weather-container {
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
+    max-width: 200px; /* Reduce el ancho máximo */
+    margin: 0; /* Elimina el margen */
+    padding: 10px; /* Reduce el padding */
     background-color: #f0f8ff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
+    position: absolute; /* Posiciona de forma absoluta */
+    top: 0; /* Coloca en la parte superior */
+    left: 0; /* Coloca en la parte izquierda */
 }
 
 .weather-info {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .weather-info .label {
@@ -17,7 +20,7 @@
 }
 
 .weather-info span {
-    font-size: 1.2em;
+    font-size: 0.9em; /* Reduce el tamaño de la fuente */
 }
 
 h2 {

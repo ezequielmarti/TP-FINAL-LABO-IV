@@ -1,17 +1,14 @@
 
-<main>
-    <h2>Últimas Noticias</h2>
-    <div *ngFor="let news of newsList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+<h2 class="centered-title">{{aux}}</h2>
+<div class="news-container">
+    <div *ngFor="let news of newsList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="news-item">
         
-            <div>
-                <h2>{{ news.title }}</h2>
-                <button (click)="onNewsClick(news)"> Ver mas</button>
-                <p><em>{{ news.timestamp | date:'shortDate' }}</em></p>
-            </div>
-            </div>
-        
-        
-        <!-- Controles de paginación -->
-        <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
-</main>
-<app-highlight/>
+        <h2>{{ news.title }}</h2>
+        <button (click)="onNewsClick(news)"> Ver más</button>
+        <p><em>{{ news.timestamp | date:'dd/MM/yy' }}</em></p>
+    </div>
+</div>
+
+<!-- Controles de paginación -->
+<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+    <app-highlight></app-highlight>

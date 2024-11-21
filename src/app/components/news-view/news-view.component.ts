@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, EMPTY } from 'rxjs';
 import { User } from '../../models/user';
 import { News } from '../../models/news';
-import { DataService } from '../../services/data.service';
 import { NewsService } from '../../services/news.service';
 import { UserService } from '../../services/user.service';
 
@@ -20,23 +19,23 @@ export class NewsViewComponent implements OnInit, OnDestroy {
   user!: User;
 
   constructor(private route: ActivatedRoute, private userService: UserService,
-    private newsService: NewsService) {}
+    private newsService: NewsService, private router: Router) {}
     // Fetch the news from Firebase
     ngOnInit(): void {
-      const newsKey = this.route.snapshot.paramMap.get('key');  // Get the ID from the URL
-  
-      // Early return if newsKey is not present
+      const newsKey = this.route.snapshot.paramMap.get('key');  // Obtener la clave de la noticia de la URL
+    
+      // Retorno temprano si no se encuentra newsKey
       if (!newsKey) {
         this.news = null;
         return;
       }
-  
-      // Usamos el servicio para obtener la noticia por su key
+    
+      // Usamos el servicio para obtener la noticia por su clave
       this.newsService.getNewsByKey(newsKey).pipe(
         catchError((error) => {
           console.error('Error fetching news:', error);
           this.news = null;
-          return EMPTY;
+          return EMPTY;  // Regresar un observable vacío en caso de error
         })
       ).subscribe({
         next: (response) => {
@@ -44,7 +43,7 @@ export class NewsViewComponent implements OnInit, OnDestroy {
             this.news = response;
             console.log('news:', this.news);
             this.likes = this.news.likeLength();
-  
+    
             // Obtener los datos del usuario solo después de que Firebase haya verificado el estado de autenticación
             this.userService.getUserData().then(userData => {
               if (userData) {
@@ -52,13 +51,19 @@ export class NewsViewComponent implements OnInit, OnDestroy {
                 console.log('user:', this.user);
               } else {
                 console.log('No se encontraron datos del usuario');
+                // Redirigir a 'not-found' si no se encuentran los datos del usuario
+                this.router.navigate(['not-found']);
               }
             }).catch(error => {
               console.log('Error al obtener los datos del usuario:', error);
+              // Redirigir a 'not-found' en caso de error al obtener los datos del usuario
+              this.router.navigate(['not-found']);
             });
           } else {
             console.error('Noticia no encontrada');
-            this.news = null;  // Si no se encuentra la noticia, se asigna null
+            this.news = null;  // Si no se encuentra la noticia, asignar null
+            // Redirigir a 'not-found' si no se encuentra la noticia
+            this.router.navigate(['not-found']);
           }
         }
       });

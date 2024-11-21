@@ -1,0 +1,82 @@
+.news-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.publisher {
+    font-family: 'Georgia', serif;
+    font-size: 1.2em;
+    margin: 0;
+    font-weight: bold;
+}
+
+.date {
+    margin: 0;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.read-more-button {
+    padding: 8px 16px;
+    background-color: #2196F3; /* Color azul, puedes cambiarlo */
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    border: 2px solid #2196F3;
+}
+
+.read-more-button:hover {
+    background-color: white;
+    color: #2196F3;
+}
+
+.like-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 2px solid #ff4081;
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.heart-icon {
+    color: #ff4081;
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+.like-button:hover {
+    background-color: #ff4081;
+    color: white;
+}
+
+.like-button:hover .heart-icon {
+    transform: scale(1.2);
+    color: white;
+}
+
+.like-button:active .heart-icon {
+    transform: scale(0.8);
+}

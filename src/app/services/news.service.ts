@@ -3,6 +3,7 @@ import { DataService } from './data.service';
 import { News } from '../models/news';
 import { BehaviorSubject, catchError, concatMap, delay, from, map, Observable, of, tap } from 'rxjs';
 import { getDatabase, ref, set, push, get, update, remove } from 'firebase/database';
+import { Category } from '../enums/category';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,15 @@ export class NewsService {
 
   private newsList = new Array<News>();
   private nextId: number = 0;
-  private categories = ['entertainment', 'world', 'business', 'health', 'sport', 'science', 'technology'];
   private newsListSubject = new BehaviorSubject<News[]>([]);
 
   constructor(private data: DataService) { }
 
   lastNews(): void {
-    from(this.categories)
+    // Convertimos el enum en un array de sus valores
+    const categories = Object.values(Category);
+  
+    from(categories)
       .pipe(
         concatMap((cat) => {
           return this.apiNews(cat).pipe(
@@ -235,13 +238,29 @@ addLikeToNews(newsKey: string, newLike: string): void {
 }
 
 
-  getHighlightedNews(): Observable<News[]> {
-    return this.getNewsList().pipe(
-      map(newsList => {
-        return newsList.sort((a, b) => b.likes.length - a.likes.length).slice(0, 6);  // Ordenar por likes y devolver las 6 primeras
-      })
-    );
-  }
+getHighlightedNews(): Observable<News[]> {
+  return this.getNewsList().pipe(
+    map(newsList => {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);  // Restar 7 días a la fecha actual
+
+      // Convertir la fecha de 7 días atrás a milisegundos
+      const sevenDaysAgoInMillis = sevenDaysAgo.getTime();
+
+      // Filtrar noticias recientes de los últimos 7 días
+      const recentNews = newsList.filter(newsItem => {
+        // Asegurarse de que el timestamp es un número (milisegundos desde la época UNIX)
+        const newsTimestamp = newsItem.timestamp;  // En milisegundos
+
+        // Verificar si la noticia es más reciente que los últimos 7 días
+        return newsTimestamp > sevenDaysAgoInMillis;
+      });
+
+      // Ordenar por likes y devolver las 6 primeras
+      return recentNews.sort((a, b) => b.likes.length - a.likes.length).slice(0, 6);
+    })
+  );
+}
   
 
   deleteNews(newsKey: string): void {

@@ -1,36 +1,36 @@
 <div class="comment-section">
-<!-- Sección para agregar un comentario -->
-<div class="comment-form">
+    <!-- Sección para agregar un comentario -->
+    <div class="comment-form">
     <textarea
-    [(ngModel)]="newCommentContent"
-    placeholder="Escribe tu comentario aquí..."
-    rows="4"
-    class="comment-input"
+        [(ngModel)]="newCommentContent"
+        placeholder="Escribe tu comentario aquí..."
+        rows="4"
+        class="comment-input"
     ></textarea>
     <button (click)="addComment()" class="btn btn-primary">Enviar</button>
-</div>
+    </div>
 
-<!-- Sección para mostrar los comentarios -->
-<div class="comments-list">
+    <!-- Sección para mostrar los comentarios -->
+    <div class="comments-list">
     <div *ngIf="comments.length === 0" class="no-comments">
-    No hay comentarios aún.
+        No hay comentarios aún.
     </div>
 
     <div *ngFor="let comment of comments" class="comment-item">
-    <div class="comment-header">
-        <span class="comment-username"> <!--{{ getUserName(comment.userId) }}--> </span>
+        <div class="comment-header">
+        <!-- Mostrar el nombre del usuario desde el objeto 'userNames' -->
+        <span class="comment-username">
+            {{ userNames[comment.userId] || 'Cargando...' }}
+        </span>
         <span class="comment-timestamp">{{ formatTimestamp(comment.timestamp) }}</span>
-    </div>
-    <div class="comment-content">
+        </div>
+        <div class="comment-content">
         {{ comment.content }}
+        </div>
+        <button *ngIf="user && user.key === comment.userId" (click)="deleteComment(comment.key)"
+        class="btn btn-danger btn-sm">
+            Eliminar
+        </button>
     </div>
-    <button
-        *ngIf="user && user.key === comment.userId"
-        (click)="deleteComment(comment.key)"
-        class="btn btn-danger btn-sm"
-    >
-        Eliminar
-    </button>
     </div>
-</div>
 </div>

@@ -5,9 +5,9 @@ import { Comment } from '../models/comment' ;
 @Injectable({
   providedIn: 'root'
 })
+
 export class CommentService {
 
-  asd!: Comment;
   constructor() {}
 
   addComment(comment: Comment): Promise<void> {

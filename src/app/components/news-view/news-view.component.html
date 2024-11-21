@@ -1,18 +1,22 @@
 <main>
-<div *ngIf="news; else loading">
-    <h1>{{ news.title }}</h1>
-    <p><strong>{{ news.publisher }}</strong></p>
-    <p>{{ news.snippet }}</p>
-    
-    <p><strong>Publicado:</strong> {{ news.timestamp | date:'dd/MM/yy' }}</p>
-    <div *ngIf="news.imageUrl">
+<div *ngIf="news; else loading" class="news-container">
+    <h2>{{ news.title }}</h2>
+    <div *ngIf="news.imageUrl" class="image-container">
         <img [src]="news.imageUrl" alt="Image" width="300">
     </div>
-
-    <!-- Botón de "Me gusta" con el contador -->
-    <button (click)="likeNews()">Me gusta ({{ likes }})</button>
+    <div class="info-row">
+        <p class="publisher">{{ news.publisher }}</p>
+        <p class="date"><strong>Fecha:</strong> {{ news.timestamp | date:'dd/MM/yy' }}</p>
+    </div>
+    <p>{{ news.snippet }}</p>
+    <div class="buttons-container">
+        <a [href]="news.url" target="_blank" class="read-more-button">Leer más</a>
+        <button (click)="likeNews()" class="like-button">
+            <span class="heart-icon">♥</span>
+            <span>Me gusta ({{ likes }})</span>
+        </button>
+    </div>
 </div>
-<app-comment/>
 </main>
 <ng-template #loading>
     <p>Cargando noticia...</p>

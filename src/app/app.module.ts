@@ -19,6 +19,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { NavigatorComponent } from './components/navigator/navigator.component';
 import { HomeComponent } from './components/home/home.component';
 import { HighlightComponent } from './components/highlight/highlight.component';
+import { CommentComponent } from './components/comment/comment.component';
 
 
 
@@ -32,7 +33,8 @@ import { HighlightComponent } from './components/highlight/highlight.component';
     SignUpComponent,
     NavigatorComponent,
     HomeComponent,
-    HighlightComponent
+    HighlightComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,

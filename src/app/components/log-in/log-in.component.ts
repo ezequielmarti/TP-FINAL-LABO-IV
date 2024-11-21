@@ -51,7 +51,7 @@ export class LogInComponent implements OnInit {
   }
 
   goToSignUp() {
-    this.router.navigate(['/signUp']);  // Navegar al formulario de SignUp
+    this.router.navigate(['/sign-up']);  // Navegar al formulario de SignUp
   }
 
   logOut() {

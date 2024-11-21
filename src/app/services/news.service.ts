@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { News } from '../models/news';
-import { BehaviorSubject, catchError, concatMap, delay, forkJoin, from, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, delay, forkJoin, from, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,18 @@ export class NewsService {
   }
 
   getNewsList() {
-    return this.newsListSubject.asObservable();  // Retornamos un Observable para que los componentes se suscriban
+    return this.newsListSubject.asObservable().pipe(
+      map(newsList => {
+        // Asegurarse de que todas las noticias tengan un arreglo de likes
+        return newsList.map(news => {
+          // Si 'likes' no está definido o es null, lo inicializamos como un arreglo vacío
+          if (!news.likes) {
+            news.likes = [];
+          }
+          return news;
+        });
+      })
+    );
   }
 
   getCategoryList(category: string): Observable<News[]> {
@@ -202,6 +213,15 @@ export class NewsService {
           console.error('No se encontró la noticia con el key proporcionado');
         }
       });
+  }
+
+  getHighlightedNews(): Observable<News[]> {
+    return this.getNewsList().pipe(
+      map(newsList => {
+        const sortedNews = newsList.sort((a, b) => b.likes.length - a.likes.length);
+        return sortedNews.slice(0, 6);
+      })
+    );
   }
 }
 

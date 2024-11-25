@@ -3,6 +3,7 @@
 <div class="news-container">
     <div *ngFor="let news of newsList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="news-item">
         
+<<<<<<< HEAD
         <h2>{{ news.title }}</h2>
         <button (click)="onNewsClick(news)"> Ver más</button>
         <p><em>{{ news.timestamp | date:'shortDate' }}</em></p>
@@ -12,3 +13,17 @@
 <!-- Controles de paginación -->
 <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
     <app-highlight></app-highlight>
+=======
+            <div>
+                <h2>{{ news.title }}</h2>
+                <button (click)="onNewsClick(news)"> Ver mas</button>
+                <p><em>{{ news.timestamp | date:'shortDate' }}</em></p>
+            </div>
+            </div>
+        
+        
+        <!-- Controles de paginación -->
+        <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+</main>
+<app-highlight/>
+>>>>>>> primer-sprint-sin-html

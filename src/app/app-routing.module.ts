@@ -4,8 +4,8 @@ import { NewsListComponent } from './components/news-list/news-list.component';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { LogInComponent } from './components/log-in/log-in.component';
-import { HomeComponent } from './components/home/home.component';
 import { guardianInGuard } from './guardians/guardian-in.guard';
+
 
 const routes: Routes = [
   { path: '', component: NewsListComponent},

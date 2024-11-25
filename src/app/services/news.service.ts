@@ -238,10 +238,6 @@ addLikeToNews(newsKey: string, newLike: string): void {
   getHighlightedNews(): Observable<News[]> {
     return this.getNewsList().pipe(
       map(newsList => {
-<<<<<<< HEAD
-        const sortedNews = newsList.sort((a, b) => b.likes.length - a.likes.length);
-        return sortedNews.slice(0, 12);
-=======
         return newsList.sort((a, b) => b.likes.length - a.likes.length).slice(0, 6);  // Ordenar por likes y devolver las 6 primeras
       })
     );
@@ -299,7 +295,6 @@ addLikeToNews(newsKey: string, newLike: string): void {
       catchError((error) => {
         console.error('Error en getNewsByKey', error);
         return [null];  // Retornar un observable con null en caso de error
->>>>>>> primer-sprint-sin-html
       })
     );
   }

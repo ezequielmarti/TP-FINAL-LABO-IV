@@ -27,7 +27,7 @@ export class DataService {
     return this.http.get<any>('https://open-weather13.p.rapidapi.com/city/Mar%20del%20Plata/ES',
       {
         headers:{
-          'x-rapidapi-key': 'fe5cee5d5emsheb3dd67a6c86484p1151d6jsnb08f71df05a7',
+          'x-rapidapi-key': 'a323c572b5msh10dd54b4a9b9412p1b7a28jsn55a7b46e1fc8',
           'x-rapidapi-host': 'open-weather13.p.rapidapi.com'
         }
       }

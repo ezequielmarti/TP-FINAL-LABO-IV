@@ -12,7 +12,7 @@ ul {
 }
 
 li {
-    background-color: #f0f0f0; /* Color de fondo gris claro */
+    background-color: rgb(157, 237, 248); /* Color de fondo gris claro */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;

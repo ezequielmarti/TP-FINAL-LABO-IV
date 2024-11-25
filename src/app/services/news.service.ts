@@ -216,18 +216,22 @@ addLikeToNews(newsKey: string, newLike: string): void {
         // Verificamos si el "like" ya está presente para evitar duplicados
         if (!news.likes.includes(newLike)) {
           news.likes.push(newLike);  // Agregamos el nuevo like
-          
-          // Actualizamos la noticia en la base de datos
-          update(newsRef, { likes: news.likes })
-            .then(() => {
-              console.log('Noticia actualizada con el nuevo like');
-            })
-            .catch((error) => {
-              console.error('Error al actualizar los likes:', error);
-            });
         } else {
-          console.log('Este like ya ha sido agregado anteriormente.');
+          // Si ya existe, lo eliminamos
+          const index = news.likes.indexOf(newLike);  // Encontramos el índice del like
+          if (index > -1) {
+            news.likes.splice(index, 1);  // Eliminamos el like en el índice encontrado
+          }
         }
+        // Actualizamos la noticia en la base de datos
+        update(newsRef, { likes: news.likes })
+          .then(() => {
+            console.log('Noticia actualizada con el nuevo like');
+          })
+          .catch((error) => {
+            console.error('Error al actualizar los likes:', error);
+          });
+        
       } else {
         console.error('No se encontró la noticia con el key proporcionado');
       }
